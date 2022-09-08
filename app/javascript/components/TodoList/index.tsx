@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, ListGroup, Form } from "react-bootstrap";
 import { ResetButton } from "./uiComponent";
 import axios from "axios";
@@ -39,16 +39,24 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
     <Container>
       <h3>2022 Wish List</h3>
       <ListGroup>
-        {todoItems.map((todo) => (
-          <ListGroup.Item key={todo.id}>
-            <Form.Check
-              type="checkbox"
-              label={todo.title}
-              checked={todo.checked}
-              onChange={(e) => checkBoxOnCheck(e, todo.id)}
-            />
-          </ListGroup.Item>
-        ))}
+        {todoItems.map((todo) => {
+          const [checkboxItems, setCheckBoxItems] = useState<TodoItem>({...todo});
+
+          return (
+            <ListGroup.Item key={checkboxItems.id}>
+              <Form.Check
+                type="checkbox"
+                label={checkboxItems.title}
+                checked={checkboxItems.checked}
+                onChange={(e) => {
+                  checkBoxOnCheck(e, checkboxItems.id);
+                  setCheckBoxItems({...checkboxItems, checked: !checkboxItems.checked});
+                }}
+              />
+            </ListGroup.Item>
+          );
+        })
+      }
         <ResetButton onClick={resetButtonOnClick}>Reset</ResetButton>
       </ListGroup>
     </Container>
